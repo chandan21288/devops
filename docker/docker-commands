@@ -1,0 +1,36 @@
+Docker installation
+
+
+
+First docker container
+
+This will show all the images.
+# docker images 
+
+This will pull nginx alpine images
+# docker pull nginx:alpine
+
+This will show container
+# docker ps -l
+
+This will remove container
+# docker rm container id
+
+This will remove nginx:alpine image
+# docker rmi nginx:alpine
+
+This will pull image from docker hub and run a container if image not available locally. and it will take a randam name if did not provide any tag
+# docker run -d nginx:alpine
+
+This will map port 80 to 9090, here 80 is container port and 9090 is local host port
+# docker run -d -p 9090:80 nginx:alpine
+
+
+
+Build first image using Docker file:
+
+This will build imag using docker file --tag is for name of the image v1 is taged version and . is stands for current directory
+# docker build --tag centos_apache:v1 .
+
+
+

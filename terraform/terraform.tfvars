@@ -1,0 +1,6 @@
+region= "ap-southeast-2"
+vpc_cidr ="10.0.0.0/16"
+subnet_cidr= "10.0.1.0/24"
+instance_type= "t3.small"
+ami_id= "ami-098341ffb8b768450"
+key_name = "terraform_key"
