@@ -1,0 +1,50 @@
+name: Deploy devops controller
+
+on:
+  workflow_dispatch:
+    
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+
+      - name: configure aws credential
+        uses: aws-action/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ap-south-1
+
+      - name: setup terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: terraform init
+        working-directory: terraform
+        run: terraform init
+
+      - name: Terraform apply
+        working-directory: terraform
+        run: terraform apply -auto-approve
+
+      - name: Get public ip 
+        working-directory: terraform
+        run: |
+          echo "[server]" > ../ansible/inventory.ini
+          echo "$(terraform output -raw public_ip)" >> ../ansible/inventory.ini
+
+      - name: setup ssh key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_PRIVATE_KEY }}" > ~/.ssh/terraform-key.pem
+          chmod 400 ~/.ssh/terraform-key.pem
+
+      - name: Wait for ssh
+        run: sleep 60
+
+      - name: Run ansible playbook
+        run: ansible-playbook -i ansible/inventory.ini ansible/ansible_terraform.yml --user ec2-user --private-key ~/.ssh/terraform-key.pem
