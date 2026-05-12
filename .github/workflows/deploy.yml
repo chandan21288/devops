@@ -27,18 +27,18 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: terraform init
-        working-directory: /devops/practice_cluster_setup/terraform
+        working-directory: practice_cluster_setup/terraform
         run: terraform init
 
       - name: Terraform apply
-        working-directory: /devops/practice_cluster_setup/terraform
+        working-directory: practice_cluster_setup/terraform
         run: terraform apply -auto-approve
 
       - name: Get public ip 
-        working-directory: terraform
+        working-directory: practice_cluster_setup/terraform
         run: |
-          echo "[server]" > ../devops/practice_cluster_setup/ansible/inventory.ini
-          echo "$(terraform output -raw public_ip)" >> ../devops/practice_cluster_setup/ansible/inventory.ini
+          echo "[server]" > ../ansible/inventory.ini
+          echo "$(terraform output -raw public_ip)" >> ../ansible/inventory.ini
 
       - name: setup ssh key
         run: |
@@ -50,4 +50,5 @@ jobs:
         run: sleep 60
 
       - name: Run ansible playbook
-        run: ansible-playbook -i /practice_cluster_setup/ansible/inventory.ini /practice_cluster_setup/ansible/ansible_terraform.yml --user ec2-user --private-key ~/.ssh/terraform-key.pem
+        working-directory: practice_cluster_setup/ansible
+        run: ansible-playbook -i inventory.ini ansible_terraform.yml --user ec2-user --private-key ~/.ssh/terraform-key.pem
