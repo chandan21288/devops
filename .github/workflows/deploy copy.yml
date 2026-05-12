@@ -1,0 +1,59 @@
+name: Deploy devops controller
+
+on:
+  workflow_dispatch:
+    
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+
+      - name: configure aws credential
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ap-south-1
+
+      - name: test aws
+        run: aws sts get-caller-identity
+
+      - name: setup terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: terraform init
+        working-directory: practice_cluster_setup/terraform
+        run: terraform init
+
+      - name: Terraform apply
+        working-directory: practice_cluster_setup/terraform
+        run: terraform apply -auto-approve
+
+      - name: Get public ip 
+        working-directory: practice_cluster_setup/terraform
+        run: |
+          echo "[server]" > ../ansible/inventory.ini
+          echo "$(terraform output -raw public_ip)" >> ../ansible/inventory.ini
+
+      - name: setup ssh key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_PRIVATE_KEY }}" > ~/.ssh/terraform-key.pem
+          chmod 400 ~/.ssh/terraform-key.pem
+
+      - name: Wait for ssh
+        run: sleep 60
+
+      - name: Add EC2 host to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H $(cat practice_cluster_setup/ansible/inventory.ini | tail -n 1) >> ~/.ssh/known_hosts
+
+      - name: Run ansible playbook
+        working-directory: practice_cluster_setup/ansible
+        run: ansible-playbook -i inventory.ini ansible_terraform.yml --user ec2-user --private-key ~/.ssh/terraform-key.pem

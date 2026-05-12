@@ -1,0 +1,33 @@
+name: AWS-s3
+
+on:
+  workflow_dispatch:
+    
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+
+      - name: configure aws credential
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ap-south-1
+
+
+      - name: setup terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: terraform init
+        working-directory: terraform-bootstrap
+        run: terraform init
+
+      - name: Terraform apply
+        working-directory: terraform-bootstrap
+        run: terraform apply -auto-approve
