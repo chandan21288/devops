@@ -49,6 +49,11 @@ jobs:
       - name: Wait for ssh
         run: sleep 60
 
+      - name: Add EC2 host to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H $(cat practice_cluster_setup/ansible/inventory.ini | tail -n 1) >> ~/.ssh/known_hosts
+
       - name: Run ansible playbook
         working-directory: practice_cluster_setup/ansible
         run: ansible-playbook -i inventory.ini ansible_terraform.yml --user ec2-user --private-key ~/.ssh/terraform-key.pem
