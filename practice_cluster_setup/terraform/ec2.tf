@@ -1,4 +1,8 @@
 
+provider "aws" {
+    region = "ap-south-1"
+}
+
 resource "aws_security_group" "terraform_sg" {
   name = "terraform_sg"
 
