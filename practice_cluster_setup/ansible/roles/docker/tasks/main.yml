@@ -13,6 +13,6 @@
 - name: add ec2-user to docker group
   user:
     name: ec2-user
-    group: docker
+    groups: docker
     append: yes
 
