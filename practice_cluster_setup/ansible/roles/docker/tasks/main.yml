@@ -1,2 +1,18 @@
 ---
-# tasks file for docker
+- name: Install docker
+  dnf:
+    name: docker
+    state: present
+
+- name: Start docker
+  service:
+    name: docker
+    state: started
+    enable: true
+
+- name: add ec2-user to docker group
+  user:
+    name: ec2-user
+    group: docker
+    append: yes
+    

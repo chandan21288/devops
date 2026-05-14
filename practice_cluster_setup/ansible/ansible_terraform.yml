@@ -4,6 +4,4 @@
   become: true
 
   roles:
-    - ansible
-    - terraform
-    - nginx
+    - docker
