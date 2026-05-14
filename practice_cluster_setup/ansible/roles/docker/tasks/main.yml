@@ -8,11 +8,11 @@
   service:
     name: docker
     state: started
-    enable: true
+    enabled: yes
 
 - name: add ec2-user to docker group
   user:
     name: ec2-user
     group: docker
     append: yes
-    
+
