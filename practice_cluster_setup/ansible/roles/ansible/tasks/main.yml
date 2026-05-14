@@ -1,2 +1,12 @@
 ---
-# tasks file for roles/common
+  - name: install packages
+    dnf:
+      name:
+        - git
+        - unzip
+        - python3-pip
+      state: present
+
+  - name: install ansible
+    pip:
+      name: ansible

@@ -3,27 +3,7 @@
   hosts: all
   become: true
 
-  tasks:
-
-    - name: install packages
-      dnf:
-        name:
-          - git
-          - unzip
-          - python3-pip
-        state: present
-
-    - name: install ansible
-      pip:
-        name: ansible
-
-    - name: Download terraform
-      get_url:
-        url: https://releases.hashicorp.com/terraform/1.12.2/terraform_1.12.2_linux_amd64.zip
-        dest: /tmp/terraform.zip
-
-    - name: install terraform
-      unarchive:
-        src: /tmp/terraform.zip
-        dest: /usr/local/bin/
-        remote_src: true
+  roles:
+    - ansible
+    - terraform
+    - nginx
