@@ -9,3 +9,13 @@
     name: nginx
     state: started
     enabled: true
+
+- name: Create custom index page
+  copy:
+    content: |
+      <html>
+      <body>
+      <h1>Welcome from GitHub Actions + Terraform + Ansible</h1>
+      </body>
+      </html>
+    dest: /usr/share/nginx/html/index.html
