@@ -1,0 +1,13 @@
+FROM nginx:stable-alpine
+
+LABEL maintainer = "Chandan"
+LABEL Project = "Docker learning"
+
+WORKDIR /usr/share/nginx/html
+
+COPY index.html .
+
+expose 80
+
+CMD ["nginx", "g", "demon off;" ]
+
