@@ -1,0 +1,7 @@
+---
+- name: Install terraform and ansible
+  hosts: all
+  become: true
+
+  roles:
+    - docker
