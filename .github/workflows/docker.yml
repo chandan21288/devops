@@ -28,7 +28,7 @@ jobs:
 
       - name: Read ec2 host IP 
         id: hostip
-        run: echo "HOST=$(tail -n -1 practice_cluster_setup/ansible/inventory.ini)" >> $GITHUB_ENV
+        run: echo "HOST=$(tail -n -1 controller_setup/ansible/inventory.ini)" >> $GITHUB_ENV
 
       - name: Image deployment on VM
         uses: appleboy/ssh-action@v1.0.3
