@@ -14,3 +14,16 @@ services:
     container_name: redis-server
 
 
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-proxy
+
+    ports:
+      - "80:80"
+
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+
+    depends_on:
+      - web
+
