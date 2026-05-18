@@ -25,3 +25,22 @@ jobs:
 
       - name: Docker push image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/mynginx:${{ github.sha }}
+
+      - name: Read ec2 host IP 
+        id: hostip
+        run: echo "HOST=$(tail -n practice_cluster_setup/ansible/inventory.ini)" >> $GITHUB_ENV)"
+
+      - name: Image deployment on VM
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ env.HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+
+
+          Script: |
+            docker pull ${{ secrets.DOCKER_USERNAME }}/mynginx:${{ github.sha }}
+
+            docker rm -f mysite || true
+
+            docker run -d -p 8080:80 --name mysite ${{ secrets.DOCKER_USERNAME }}/mynginx:${{ github.sha }}
