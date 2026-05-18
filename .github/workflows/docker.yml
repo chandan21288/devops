@@ -21,7 +21,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build docker image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/mynginx:v2 -f ./docker/nginx-project/dockerfile docker/nginx-project
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/mynginx:${{ github.sha }} -f ./docker/nginx-project/dockerfile docker/nginx-project
 
       - name: Docker push image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/mynginx:v2
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/mynginx:${{ github.sha }}
