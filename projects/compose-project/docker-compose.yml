@@ -1,16 +1,16 @@
 services:
   web:
-    build .
+    build: .
 
     container_name: flask-app
     ports:
       - "5000:5000"
     depends_on:
-      - radis
+      - redis
 
-  radis:
-    image: radis:alpine
+  redis:
+    image: redis:alpine
 
-    container_name: radis-server
+    container_name: redis-server
 
-    
+
