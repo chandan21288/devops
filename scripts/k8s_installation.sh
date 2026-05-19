@@ -19,7 +19,7 @@ fi
 echo "Starting docker installation"
 
 sudo systemctl enable docker 
-sudo systectl start docker 
+sudo systemctl start docker 
 sudo usermod -aG docker $USER
 
 #Kubectl installation
